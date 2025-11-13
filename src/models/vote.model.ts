@@ -3,7 +3,7 @@ import { UserModel } from "./user.model";
 import { IdeaModel } from "./idea.model";
 
 @ObjectType()
-export class Vote {
+export class VoteModel {
   @Field(() => ID)
   id!: string;
 
@@ -13,9 +13,9 @@ export class Vote {
   @Field(() => String)
   ideaId!: string;
 
-  @Field(() => UserModel)
-  user!: UserModel;
+  @Field(() => UserModel, { nullable: true })
+  user?: UserModel;
 
-  @Field(() => IdeaModel)
-  idea!: IdeaModel;
+  @Field(() => IdeaModel, { nullable: true })
+  idea?: IdeaModel;
 }
