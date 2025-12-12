@@ -5,7 +5,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 
-
 export function IdeasPage() {
   const [isCreateIdeaDialogOpen, setIsCreateIdeaDialogOpen] = useState(false);
 
@@ -14,14 +13,17 @@ export function IdeasPage() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <Label className="text-3xl font-medium text-purple-600">Ideias</Label>
-          <Button>
-            <Plus />
+          <Button onClick={() => setIsCreateIdeaDialogOpen(true)}>
+            <Plus className="mr-2 h-4 w-4" />
             Nova Ideia
           </Button>
         </div>
       </div>
 
-      <CreateIdeaDialog open={isCreateIdeaDialogOpen} onOpenChange={setIsCreateIdeaDialogOpen} />
+      <CreateIdeaDialog
+        open={isCreateIdeaDialogOpen}
+        onOpenChange={setIsCreateIdeaDialogOpen}
+      />
     </Page>
-  )
+  );
 }
