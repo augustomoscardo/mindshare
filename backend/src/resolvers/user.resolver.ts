@@ -1,11 +1,13 @@
-import { Arg, Mutation, Query, Resolver, UseMiddleware } from "type-graphql";
+import { Arg, Ctx, Mutation, Query, Resolver, UseMiddleware } from "type-graphql";
 import { UserModel } from "../models/user.model";
 import { UserService } from "../services/user.service";
 import { isAuth } from "../middlewares/auth.middleware";
-import { CreateUserInput } from "../dtos/input/user.input";
+import { CreateUserInput, UpdateUserInput } from "../dtos/input/user.input";
+import { GraphqlContext } from '../graphql/context'
 
 @Resolver(() => UserModel)
 @UseMiddleware(isAuth)
+
 export class UserResolver {
   private userService = new UserService
 
@@ -16,10 +18,30 @@ export class UserResolver {
     return this.userService.createUser(data)
   }
 
-  @Query(() => UserModel)
-  async getUser(
-    @Arg("id", () => String) id: string
+  @Mutation(() => UserModel)
+  async updateUser(
+    @Arg('id', () => String) id: string,
+    @Arg('data', () => UpdateUserInput) data: UpdateUserInput
   ): Promise<UserModel> {
+    return this.userService.updateUser(id, data)
+  }
+
+  @Mutation(() => Boolean)
+  async deleteUser(
+    @Arg('id', () => String) id: string,
+    @Ctx() ctx: GraphqlContext
+  ): Promise<boolean> {
+    if (ctx.user === id) throw new Error('Você não pode excluir a si mesmo.')
+    return this.userService.deleteUser(id)
+  }
+
+  @Query(() => UserModel)
+  async getUser(@Arg("id", () => String) id: string): Promise<UserModel> {
     return this.userService.findUser(id);
+  }
+
+  @Query(() => [UserModel])
+  async listUsers(): Promise<UserModel[]> {
+    return this.userService.listUsers()
   }
 }
